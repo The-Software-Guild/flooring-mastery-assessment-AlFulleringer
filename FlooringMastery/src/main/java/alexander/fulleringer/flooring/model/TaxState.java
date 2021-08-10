@@ -11,15 +11,19 @@ import java.math.BigDecimal;
  *
  * @author Alex
  */
-public class State {
+public class TaxState {
     private String stateAbbr;
     private String stateName;
     private BigDecimal taxRate;
 
-    public State(String stateAbbr, String stateName, BigDecimal taxRate) {
+    public TaxState(String stateAbbr, String stateName, BigDecimal taxRate) {
         this.stateAbbr = stateAbbr;
         this.stateName = stateName;
         this.taxRate = taxRate;
+    }
+
+    public TaxState() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String getStateAbbr() {

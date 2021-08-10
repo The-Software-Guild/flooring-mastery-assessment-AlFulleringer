@@ -7,7 +7,8 @@ package alexander.fulleringer.flooring.dao;
 
 import alexander.fulleringer.flooring.model.Order;
 import alexander.fulleringer.flooring.model.Product;
-import java.lang.Thread.State;
+import alexander.fulleringer.flooring.model.TaxState;
+import alexander.fulleringer.flooring.exceptions.DaoFileAccessException;
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -17,22 +18,18 @@ import java.util.Map;
  */
 public interface FlooringDao {
     
-    void importStates();
-    void importOrders();
-    void importProducts();
+    void importStates() throws DaoFileAccessException;
+    void importOrders() throws DaoFileAccessException;
+    void importProducts() throws DaoFileAccessException;
     
-    void exportData();
+    void exportData() throws DaoFileAccessException;
     
     Order addOrder(Order order);
-    Order editOrderCustomer(String Customer, Order order);
-    Order editState(State state, Order order);
+    Order editOrderCustomer(String customer, Order order);
+    Order editState(TaxState state, Order order);
     Order editProduct(Product product, Order order);
     Order editArea(BigDecimal area, Order order);
     
     Order removeOrder(Integer orderNum);
     Order getOrder(Integer orderNum);
-    
-    
-    
-    
 }

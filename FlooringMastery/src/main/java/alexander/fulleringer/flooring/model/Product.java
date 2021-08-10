@@ -12,22 +12,26 @@ import java.math.BigDecimal;
  * @author Alex
  */
 public class Product {
-    String ProductType;
+    String productType;
     BigDecimal costPerSqFoot;
     BigDecimal laborPerSqFoot;
 
     public Product(String ProductType, BigDecimal costPerSqFoot, BigDecimal laborPerSqFoot) {
-        this.ProductType = ProductType;
+        this.productType = ProductType;
         this.costPerSqFoot = costPerSqFoot;
         this.laborPerSqFoot = laborPerSqFoot;
     }
 
+    public Product() {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public String getProductType() {
-        return ProductType;
+        return productType;
     }
 
     public void setProductType(String ProductType) {
-        this.ProductType = ProductType;
+        this.productType = ProductType;
     }
 
     public BigDecimal getCostPerSqFoot() {
@@ -48,7 +52,7 @@ public class Product {
 
     @Override
     public String toString() {
-        return "Product{" + "ProductType=" + ProductType + ", costPerSqFoot=" + costPerSqFoot + ", laborPerSqFoot=" + laborPerSqFoot + '}';
+        return "Product{" + "ProductType=" + productType + ", costPerSqFoot=" + costPerSqFoot + ", laborPerSqFoot=" + laborPerSqFoot + '}';
     }
     
 }
