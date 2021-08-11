@@ -16,6 +16,9 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -73,12 +76,18 @@ public class FlooringDaoFileImpl implements FlooringDao {
         }
         
         String currentLine = scanner.nextLine(); //Skip over the first line.
-        Order nextOrder;
+        Order nextOrder = null;
         
         while(scanner.hasNextLine()){
             currentLine = scanner.nextLine();
             nextOrder = unmarshallOrder(currentLine);
             orders.put(nextOrder.getOrderNumber(), nextOrder);
+        }
+        if (nextOrder!=null){
+            Order.setNextOrderNum(nextOrder.getOrderNumber()+1);
+        }
+        else{
+            Order.setNextOrderNum(1);
         }
         scanner.close();
     }
@@ -126,7 +135,8 @@ public class FlooringDaoFileImpl implements FlooringDao {
     }
     
     @Override
-    public Order addOrder(Order order) {
+    public Order addOrder(Order order) throws DaoFileAccessException {
+        printToDatedFile(order);
         return orders.put(order.getOrderNumber(), order);
     }
     
@@ -137,7 +147,8 @@ public class FlooringDaoFileImpl implements FlooringDao {
     }
     
     @Override
-    public Order editProduct(Product product, Order order) {
+    public Order editProduct(String productType, Order order) {
+        Product product = products.get(productType);
         order.setCostPerSqFoot(product.getCostPerSqFoot());
         order.setLaborCost(product.getLaborPerSqFoot());
         order.setProductType(product.getProductType());
@@ -161,7 +172,8 @@ public class FlooringDaoFileImpl implements FlooringDao {
     }
     
     @Override
-    public Order editState(TaxState state, Order order) {
+    public Order editState(String stateAbbr, Order order) {
+        TaxState state = states.get(stateAbbr);
         order.setStateAbbr(state.getStateAbbr());
         order.setTaxRate(state.getTaxRate());
         return order;
@@ -204,5 +216,38 @@ public class FlooringDaoFileImpl implements FlooringDao {
     
     private List<Order> getAllOrders() {
         return new ArrayList<>(orders.values());
+    }
+
+    @Override
+    public boolean isValidState(String s) {
+        return states.containsKey(s);
+    }
+
+    @Override
+    public boolean isValidProduct(String s) {
+        return products.containsKey(s);
+    }
+
+    private void printToDatedFile(Order order) throws DaoFileAccessException {
+        
+        String firstLine = "OrderNumber,CustomerName,State,TaxRate,ProductType,Area,CostPerSquareFoot,LaborCostPerSquareFoot,MaterialCost,LaborCost,Tax,Total,OrderDate";
+        String toPrint = order.getFileString();
+       
+        LocalDateTime timeStamp = LocalDateTime.now();
+        String path = ORDERS_FOLDER + "/orders_" + timeStamp.format(DateTimeFormatter.BASIC_ISO_DATE);
+        
+        PrintWriter out;
+       
+        try {
+            out = new PrintWriter(new FileWriter(path, true));
+        } catch (IOException e) {
+            throw new DaoFileAccessException("Could not write order to its dated file.", e);
+        }
+        
+        
+       
+        out.println(timeStamp.toString() + " : " + toPrint);
+        out.flush();
+        out.close(); //TODO VERIFY THIS
     }
 }

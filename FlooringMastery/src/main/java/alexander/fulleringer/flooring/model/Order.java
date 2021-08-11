@@ -31,6 +31,8 @@ public class Order {
     BigDecimal total;
 
     public Order() {
+        this.orderNumber = Order.nextOrderNum;
+        Order.nextOrderNum++;
     }
 
     public static int getNextOrderNum() {

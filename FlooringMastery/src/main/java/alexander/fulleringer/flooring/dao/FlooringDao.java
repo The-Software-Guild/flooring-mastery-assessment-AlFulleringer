@@ -24,12 +24,15 @@ public interface FlooringDao {
     
     void exportData() throws DaoFileAccessException;
     
-    Order addOrder(Order order);
+    Order addOrder(Order order) throws DaoFileAccessException;
     Order editOrderCustomer(String customer, Order order);
-    Order editState(TaxState state, Order order);
-    Order editProduct(Product product, Order order);
+    Order editState(String stateAbbr, Order order);
+    Order editProduct(String productType, Order order);
     Order editArea(BigDecimal area, Order order);
     
     Order removeOrder(Integer orderNum);
     Order getOrder(Integer orderNum);
+    
+    boolean isValidState(String s);
+    boolean isValidProduct(String s);
 }

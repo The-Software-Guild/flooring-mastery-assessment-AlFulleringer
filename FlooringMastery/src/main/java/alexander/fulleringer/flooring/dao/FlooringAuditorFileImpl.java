@@ -38,6 +38,7 @@ public class FlooringAuditorFileImpl implements FlooringAuditor{
         LocalDateTime timestamp = LocalDateTime.now();
         out.println(timestamp.toString() + " : " + entry);
         out.flush();
+        out.close(); //TODO VERIFY THIS
     }
     
     
