@@ -183,8 +183,7 @@ public class FlooringDaoFileImpl implements FlooringDao {
     public Order addOrder(Order order) throws DaoFileAccessException {
         Order result = orders.put(order.getOrderNumber(), order);
         this.printToDatedFile(order);
-        this.exportData();
-        
+        this.exportData();      
         return result;
     }
     

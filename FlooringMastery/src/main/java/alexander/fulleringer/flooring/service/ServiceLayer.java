@@ -76,22 +76,30 @@ public class ServiceLayer {
 
     public Order editOrderState(String s, Integer orderNum) throws AuditorFileAccessException {
         auditor.writeEditEntry(dao.getOrder(orderNum));
-        return dao.editState(s, dao.getOrder(orderNum));
+        Order order = dao.editState(s, dao.getOrder(orderNum));
+        orderCalcs(order);
+        return order;
     }
 
     public Order editOrderCustomer(String s, Integer orderNum) throws AuditorFileAccessException {
         auditor.writeEditEntry(dao.getOrder(orderNum));
-        return dao.editOrderCustomer(s, dao.getOrder(orderNum));
+        Order order = dao.editOrderCustomer(s, dao.getOrder(orderNum));
+        
+        return order;
     }
 
     public Order editOrderProduct(String s, Integer orderNum) throws AuditorFileAccessException {
         auditor.writeEditEntry(dao.getOrder(orderNum));
-        return dao.editProduct(s, dao.getOrder(orderNum));
+        Order order = dao.editProduct(s, dao.getOrder(orderNum));
+        orderCalcs(order);
+        return order;
     }
 
     public Order editOrderArea(BigDecimal area, Integer orderNum) throws AuditorFileAccessException {
         auditor.writeEditEntry(dao.getOrder(orderNum));
-        return dao.editArea(area, dao.getOrder(orderNum));
+        Order order = dao.editArea(area, dao.getOrder(orderNum));
+        orderCalcs(order);
+        return order;
     }
 
     public void orderCalcs(Order order) {

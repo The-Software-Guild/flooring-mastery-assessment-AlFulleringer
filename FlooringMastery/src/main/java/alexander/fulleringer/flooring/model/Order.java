@@ -272,6 +272,8 @@ public class Order {
 //        return true;
 //    }
 
-
+    public void setOrderNum(int i) {
+            this.orderNumber = i;
+        }
     
 }
