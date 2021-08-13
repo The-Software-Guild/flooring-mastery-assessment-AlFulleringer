@@ -6,10 +6,14 @@
 package alexander.fulleringer.flooring.view;
 
 import alexander.fulleringer.flooring.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.flooring.exceptions.DateFormatException;
 import alexander.fulleringer.flooring.model.Order;
 import alexander.fulleringer.flooring.model.Product;
 import alexander.fulleringer.flooring.model.TaxState;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 /**
@@ -24,10 +28,18 @@ public class View {
     public View(UserIO io){
         this.io=io;
     }
+
+    public View() {
+        io = new UserIOConsoleImpl();
+    }
     
     public int printMenuGetSelection(){
         this.printMenu();
         return this.getMenuChoice(NUM_MAIN_MENU_OPTIONS);
+    }
+    public int printEditMenuGetSelection(){
+        this.printEditOrderMenu();
+        return this.getMenuChoice(NUM_EDIT_MENU_OPTIONS);
     }
     /**
      * This function asks a user for input to fill out the required fields to make and return a new DVD
@@ -66,7 +78,7 @@ public class View {
 
 //
     public void displayOrders(List<Order> orders){
-        io.print("\nHere is what we have in our Vending Machine!");
+        io.print("\nHere are the orders you asked for");
         for(Order order : orders){
             displayOrder(order);
         }
@@ -132,19 +144,19 @@ public class View {
     }
 
     private void printEditOrderMenu() {
-        System.out.println("Which coin would you like to add?");
-        System.out.println("Your options are as follows:");
+        io.print("Which information would you like to edit?");
+        io.print("Your options are as follows:");
         
-        System.out.println("1. Penny");
-        System.out.println("2. Nickel");
-        System.out.println("3. Dime");
-        System.out.println("4. Quarter");
-        System.out.println("5. Exit without inserting a coin");
+        io.print("1. Customer Name");
+        io.print("2. State");
+        io.print("3. Product Type");
+        io.print("4. Area");
+        io.print("5. Return to main menu");
     }
 
-    public void displayError(AuditorFileAccessException e) {
-        System.out.println("---ERROR---");
-        System.out.println(e.getMessage());
+    public void displayError(Exception e) {
+        io.print("---ERROR---");
+        io.print(e.getMessage());
               
     }
 //
@@ -161,26 +173,122 @@ public class View {
 //        return inventory.get(choice-1).getName();
 //    }
     
-    public void displayFunds(BigDecimal funds){
-        io.print("Funds available: " + funds.toString());
-    }
 
-    public void printPurchaseSuccess(String itemId, BigDecimal funds) {
-        io.print("You have successfully purchased a " + itemId + ". You have " + funds.toString() +"$ remaining.");
-    }
     
     public void displayStates(List<TaxState> states){
-        System.out.println("We currently serve the following states:");
+        io.print("We currently serve the following states:");
         for(TaxState state : states){
-            System.out.println(state.toString());
+            io.print(state.toString());
         }
     }
-    public void displayProductTypes(List<Product> products){
-        System.out.println("We currently offer the following floors:");
+    public void displayAllProducts(List<Product> products){
+        io.print("We currently offer the following products:");
         for(Product product : products){
-            System.out.println(product.toString());
+            io.print(product.toString());
         }
         
     }
+
+    public LocalDate getDate() {
+        io.print("Please input the date whose orders you would like to review");
+        String s;
+        LocalDate date;
+        s = io.readString("The date should be of format: YYYY-MM-DD");
+        try{
+            date = LocalDate.parse(s, DateTimeFormatter.ISO_DATE);
+            return date;
+        }
+        catch(DateTimeParseException e){
+            DateFormatException  exception = new DateFormatException("That is not a valid date format, please try again."); 
+            displayError(exception);
+            return getDate();
+        }
+        
+    }
+
+    public String parseString(String prompt) {
+        return io.readString(prompt);
+    }
+
+    public void displayStateSelectionBanner() {
+        io.print("Please choose one of the following states using their abbreviation!");
+    }
+
+    public void displayBadStateBanner() {
+        io.print("That is not a state we provide service in.");
+    }
+
+    public void displaySuccess(String prompt) {
+        io.readString(prompt + "\nPress Enter to continue");
+    }
+
+    public BigDecimal parseBigDecimal(){
+        BigDecimal toReturn;
+        String toUse = this.parseString("Please enter a decimal value.");
+        try{
+            toReturn = new BigDecimal(toUse);
+        }
+        catch(NumberFormatException e){
+            io.print("That's not a valid decimal :(");
+            toReturn = parseBigDecimal();
+        }
+        return toReturn;
+    }
+    public LocalDate getNewOrderDate() {
+        io.print("Please input the date you would like, it must be in the future!");
+        String s;
+        LocalDate date;
+        s = io.readString("The date should be of format: YYYY-MM-DD");
+        try{
+            date = LocalDate.parse(s, DateTimeFormatter.ISO_DATE);
+            return date;
+        }
+        catch(DateTimeParseException e){
+            DateFormatException  exception = new DateFormatException("That is not a valid date format, please try again."); 
+            displayError(exception);
+            return getDate();
+        }
+            }
+
+    public void displayProductSelectionBanner() {
+        io.print("Choose one of our products by entering its product type!");
+    }
+
+    public void displayBadProductBanner() {
+        io.print("That is not a product we provide :(");
+    }
+
+    public void displayRequestAreaPrompt() {
+        io.print("Please enter a positive decimal value for the area!");
+    }
+
+    public int parseOrderNumber() {
+        return io.readInt("Please input your order number");
+
+    }
+
+    public String getEditCustomerName(Order o) {
+
+        io.print("Your customer's name is currently: " + o.getCustomerName());
+        
+        return io.readString("Enter a new name or simply press enter to not change the name");
+    }
+
+    public void displayInvalidInputBanner() {
+        io.readString("That is not a valid input in this scenario");
+    }
+
+    public String getEditState(Order theOrder, List<TaxState> states) {
+        io.print("Your current state is: " + theOrder.getStateAbbr());
+        this.displayStates(states);
+        return io.readString("Please choose one of the above states by abbreviation\n"
+                + "Or press enter to not make a change");
+    }
+
+    public String getEditProduct(Order theOrder, List<Product> allProducts) {
+        io.print("Your current product is: " + theOrder.getProductType());
+        this.displayAllProducts(allProducts);
+        return io.readString("Please choose one of the above products\n"
+                + "Or press enter to not make a change");    }
     
 }

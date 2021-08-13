@@ -23,7 +23,6 @@ public class TaxState {
     }
 
     public TaxState() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 
     public String getStateAbbr() {

@@ -5,10 +5,40 @@
  */
 package alexander.fulleringer.flooring;
 
+import alexander.fulleringer.flooring.controller.Controller;
+import alexander.fulleringer.flooring.dao.FlooringAuditor;
+import alexander.fulleringer.flooring.dao.FlooringAuditorFileImpl;
+import alexander.fulleringer.flooring.dao.FlooringDao;
+import alexander.fulleringer.flooring.dao.FlooringDaoFileImpl;
+import alexander.fulleringer.flooring.exceptions.DaoFileAccessException;
+import alexander.fulleringer.flooring.model.Order;
+import alexander.fulleringer.flooring.service.ServiceLayer;
+import alexander.fulleringer.flooring.view.View;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
 /**
  *
  * @author Alex
  */
 public class App {
-    
+    public static void main(String[] args){
+        try{
+        FlooringDao dao = new FlooringDaoFileImpl();
+        FlooringAuditor auditor = new FlooringAuditorFileImpl();
+        View view = new View();
+        ServiceLayer service = new ServiceLayer(dao,auditor);
+        
+        Controller controller = new Controller(service, view);
+        
+        controller.run();
+        }
+        catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+        
+        
+        
+    }
 }

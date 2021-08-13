@@ -6,6 +6,8 @@
 package alexander.fulleringer.flooring.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 /**
@@ -13,7 +15,7 @@ import java.util.Objects;
  * @author Alex
  */
 public class Order {
-    static String DELIMITER = ",";
+    static String DELIMITER = "::";
     static int nextOrderNum;
     Integer orderNumber;
     String customerName;
@@ -29,10 +31,13 @@ public class Order {
     BigDecimal laborCost;
     BigDecimal tax;
     BigDecimal total;
+    
+    LocalDate orderDate;
 
     public Order() {
         this.orderNumber = Order.nextOrderNum;
         Order.nextOrderNum++;
+        this.setOrderDate(LocalDate.now());
     }
 
     public static int getNextOrderNum() {
@@ -139,6 +144,14 @@ public class Order {
         this.total = total;
     }
 
+    public LocalDate getOrderDate() {
+        return orderDate;
+    }
+
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
    
     public String getFileString(){
 
@@ -157,6 +170,27 @@ public class Order {
                 + laborCost + Order.DELIMITER 
                 + tax + Order.DELIMITER 
                 + total;
+
+        
+    }
+     public String getDatedFileString(){
+
+        return orderNumber + Order.DELIMITER 
+                + customerName + Order.DELIMITER 
+                
+                + stateAbbr + Order.DELIMITER 
+                + taxRate + Order.DELIMITER 
+
+                + productType+ Order.DELIMITER
+                + area + Order.DELIMITER 
+                + costPerSqFoot+ Order.DELIMITER
+                + laborPerSqFoot + Order.DELIMITER
+
+                + materialCost + Order.DELIMITER 
+                + laborCost + Order.DELIMITER 
+                + tax + Order.DELIMITER 
+                + total + Order.DELIMITER
+                + orderDate.toString();
 
         
     }

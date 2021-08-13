@@ -6,6 +6,7 @@
 package alexander.fulleringer.flooring.dao;
 
 import alexander.fulleringer.flooring.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.flooring.model.Order;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,6 +40,12 @@ public class FlooringAuditorFileImpl implements FlooringAuditor{
         out.println(timestamp.toString() + " : " + entry);
         out.flush();
         out.close(); //TODO VERIFY THIS
+    }
+
+    @Override
+    public void writeAddEntry(Order order) throws AuditorFileAccessException{
+        String s = LocalDateTime.now().toString() + ": the following Order has been added " + order.toString();
+        writeEntry(s);
     }
     
     

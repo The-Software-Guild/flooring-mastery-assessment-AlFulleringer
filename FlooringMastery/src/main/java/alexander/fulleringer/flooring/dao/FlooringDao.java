@@ -10,6 +10,8 @@ import alexander.fulleringer.flooring.model.Product;
 import alexander.fulleringer.flooring.model.TaxState;
 import alexander.fulleringer.flooring.exceptions.DaoFileAccessException;
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,6 +35,21 @@ public interface FlooringDao {
     Order removeOrder(Integer orderNum);
     Order getOrder(Integer orderNum);
     
+    List<Order> importDatedOrders(LocalDate date) throws DaoFileAccessException;
+    List<Order> getAllOrders();
+    List<TaxState> getAllStates();
+    List<Product> getAllProducts();
+    
     boolean isValidState(String s);
     boolean isValidProduct(String s);
+    boolean doesFileExist(String filePath);
+
+    public List<Order> getDatedOrders(LocalDate date);
+    
+    public void redoDatedFile(LocalDate date) throws DaoFileAccessException;
+
+    public TaxState getState(String stateAbbr);
+
+    public Product getProduct(String productType);
+    
 }

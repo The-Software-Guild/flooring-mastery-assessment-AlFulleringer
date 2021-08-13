@@ -1,17 +1,26 @@
 /*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+* To change this license header, choose License Headers in Project Properties.
+* To change this template file, choose Tools | Templates
+* and open the template in the editor.
+*/
 package alexander.fulleringer.flooring.service;
 
 import alexander.fulleringer.flooring.dao.FlooringAuditor;
 import alexander.fulleringer.flooring.dao.FlooringAuditorFileImpl;
 import alexander.fulleringer.flooring.dao.FlooringDao;
 import alexander.fulleringer.flooring.dao.FlooringDaoFileImpl;
+import alexander.fulleringer.flooring.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.flooring.exceptions.DaoFileAccessException;
+import alexander.fulleringer.flooring.exceptions.NoOrdersFoundException;
 import alexander.fulleringer.flooring.model.Order;
+import alexander.fulleringer.flooring.model.Product;
+import alexander.fulleringer.flooring.model.TaxState;
+import alexander.fulleringer.flooring.view.View;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  *
@@ -22,18 +31,42 @@ public class ServiceLayer {
     FlooringDao dao;
     FlooringAuditor auditor;
     
-    ServiceLayer(){
+    
+    public ServiceLayer() throws DaoFileAccessException{
         dao = new FlooringDaoFileImpl();
         auditor = new FlooringAuditorFileImpl();
     }
+
+    public ServiceLayer(FlooringDao dao, FlooringAuditor auditor) {
+        this.dao = dao;
+        this.auditor = auditor;
+    }
     
+    public void exportData()throws DaoFileAccessException{
+        dao.exportData();
+    }
+    
+    public List<Order> getAllOrders(){
+        return dao.getAllOrders();
+    }
+    public List<Order> getDatedOrders(LocalDate date) throws NoOrdersFoundException{
+        List<Order> datedOrders = dao.getDatedOrders(date);
+        if (datedOrders.size()==0){
+            throw new NoOrdersFoundException("No orders for this date were found") ;
+        }
+        else{
+            return datedOrders;
+        }
+    }
     public Order getOrder(Integer orderNumber){
         return dao.getOrder(orderNumber);
     }
     
-    public Order addOrder(Order order){
+    public Order fillInAndAddOrder(Order order) throws DaoFileAccessException, AuditorFileAccessException{
         orderCalcs(order);
-        return dao.addOrder(order);
+        Order added = dao.addOrder(order);
+        auditor.writeAddEntry(order);
+        return added;
     }
     
     public Order removeOrder(Integer orderNumber){
@@ -58,12 +91,21 @@ public class ServiceLayer {
     
     
     public void orderCalcs(Order order){
+        TaxState state = dao.getState(order.getStateAbbr());
+        Product product = dao.getProduct(order.getProductType());
+        
+        order.setTaxRate(state.getTaxRate());
+        
+        order.setCostPerSqFoot(product.getCostPerSqFoot());
+        order.setLaborPerSqFoot(product.getLaborPerSqFoot());
+        
+        
         BigDecimal laborCost = order.getArea().multiply(order.getLaborPerSqFoot());
         laborCost.setScale(2, RoundingMode.HALF_UP);
         order.setLaborCost(laborCost);
         
-        BigDecimal materialCost = order.getArea().multiply(order.getCostPerSqFoot()); 
-        materialCost.setScale(2, RoundingMode.HALF_UP); 
+        BigDecimal materialCost = order.getArea().multiply(order.getCostPerSqFoot());
+        materialCost.setScale(2, RoundingMode.HALF_UP);
         order.setMaterialCost(materialCost);
         
         
@@ -74,10 +116,23 @@ public class ServiceLayer {
         
         order.setTotal(taxes.add(materialCost).add(laborCost));
     }
-    boolean isValidState(String s){
+    public boolean isValidState(String s){
         return dao.isValidState(s);
     }
-    boolean isValidProduct(String s){
+    public boolean isValidProduct(String s){
         return dao.isValidProduct(s);
+    }
+    void redoDatedFile(LocalDate date) throws DaoFileAccessException{
+        dao.redoDatedFile(date);
+    }
+    public List<TaxState> getAllStates(){
+        return dao.getAllStates();
+    }
+    public List<Product> getAllProducts(){
+        return dao.getAllProducts();
+    }
+    public boolean isValidDate(LocalDate date){
+        LocalDate now = LocalDate.now();
+        return date.isAfter(now);
     }
 }

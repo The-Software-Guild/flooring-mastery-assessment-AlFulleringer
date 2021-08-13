@@ -6,6 +6,7 @@
 package alexander.fulleringer.flooring.dao;
 
 import alexander.fulleringer.flooring.exceptions.AuditorFileAccessException;
+import alexander.fulleringer.flooring.model.Order;
 
 /**
  *
@@ -14,5 +15,7 @@ import alexander.fulleringer.flooring.exceptions.AuditorFileAccessException;
 public interface FlooringAuditor {
     
     void writeEntry(String s)throws AuditorFileAccessException;
+
+    public void writeAddEntry(Order order) throws AuditorFileAccessException;
 
 }

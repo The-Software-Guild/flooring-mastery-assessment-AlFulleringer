@@ -1,0 +1,1 @@
+2021-08-12T23:36:25.949422700 : 2021-08-12T23:36:25.929403700: the following Order has been added Order{orderNumber=4, customerName=ALex Fulleringer, area=100, stateAbbr=CA, taxRate=25.00, productType=Laminate, costPerSqFoot=1.75, laborPerSqFoot=2.10, materialCost=175.00, laborCost=210.00, tax=96.25, total=481.25}
