@@ -172,7 +172,7 @@ public class FlooringDaoFileImpl implements FlooringDao {
         out.println("OrderNumber::CustomerName::State::TaxRate::ProductType::Area::CostPerSquareFoot::"
                 + "LaborCostPerSquareFoot::MaterialCost::LaborCost::Tax::Total::OrderDate");
         for(Order order: this.getAllOrders()){
-            toWrite = order.getFileString();
+            toWrite = order.getDatedFileString();
             out.println(toWrite);
         }
         out.flush();
@@ -216,8 +216,11 @@ public class FlooringDaoFileImpl implements FlooringDao {
     }
     
     @Override
-    public Order removeOrder(Integer orderNum) {
-        return orders.remove(orderNum);
+    public Order removeOrder(Integer orderNum) throws DaoFileAccessException{
+        Order toDrop = orders.remove(orderNum);
+        this.exportData();
+        this.redoDatedFile(toDrop.getOrderDate());
+        return toDrop;
     }
     
     @Override
@@ -357,7 +360,7 @@ public class FlooringDaoFileImpl implements FlooringDao {
     @Override
     public void redoDatedFile(LocalDate date) throws DaoFileAccessException {
         
-        String path = ORDERS_FOLDER + "/Orders_" + date.format(DateTimeFormatter.BASIC_ISO_DATE);
+        String path = ORDERS_FOLDER + "\\Orders_" + date.format(DateTimeFormatter.BASIC_ISO_DATE)+".txt";
         
         PrintWriter out;
         try {

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="
+                http://www.springframework.org/schema/beans
+                http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="io" class="alexander.fulleringer.flooring.view.UserIOConsoleImpl" />
+
+    <bean id="dao" class="alexander.fulleringer.flooring.dao.FlooringDaoFileImpl" />
+	<bean id="auditor" class="alexander.fulleringer.flooring.dao.FlooringAuditorFileImpl" />
+	<bean id="view" class="alexander.fulleringer.flooring.view.View">
+        <constructor-arg ref="io" />
+    </bean>
+
+    <bean id="service" class="alexander.fulleringer.flooring.service.ServiceLayer">
+        <constructor-arg ref="dao" />
+		<constructor-arg ref="auditor" />
+    </bean>
+
+    <bean id="controller" class="alexander.fulleringer.flooring.controller.Controller">
+        <constructor-arg ref="service" />
+        <constructor-arg ref="view" />
+    </bean>
+
+</beans>

@@ -18,4 +18,8 @@ public interface FlooringAuditor {
 
     public void writeAddEntry(Order order) throws AuditorFileAccessException;
 
+    public void writeRemoveEntry(Order order)throws AuditorFileAccessException;
+
+    public void writeEditEntry(Order order)throws AuditorFileAccessException;
+
 }

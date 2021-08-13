@@ -47,6 +47,18 @@ public class FlooringAuditorFileImpl implements FlooringAuditor{
         String s = LocalDateTime.now().toString() + ": the following Order has been added " + order.toString();
         writeEntry(s);
     }
+
+    @Override
+    public void writeRemoveEntry(Order order) throws AuditorFileAccessException {
+        String s = LocalDateTime.now().toString() + ": the following Order has been removed" + order.toString();
+        writeEntry(s);
+    }
+
+    @Override
+    public void writeEditEntry(Order order) throws AuditorFileAccessException {
+        String s = LocalDateTime.now().toString() + ": the following Order has been edited" + order.toString();
+        writeEntry(s);
+    }
     
     
 }

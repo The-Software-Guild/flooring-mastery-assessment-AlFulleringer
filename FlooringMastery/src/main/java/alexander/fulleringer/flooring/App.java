@@ -17,6 +17,8 @@ import alexander.fulleringer.flooring.view.View;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 /**
  *
@@ -24,21 +26,25 @@ import java.util.List;
  */
 public class App {
     public static void main(String[] args){
-        try{
-        FlooringDao dao = new FlooringDaoFileImpl();
-        FlooringAuditor auditor = new FlooringAuditorFileImpl();
-        View view = new View();
-        ServiceLayer service = new ServiceLayer(dao,auditor);
-        
-        Controller controller = new Controller(service, view);
-        
+//        try{
+//        FlooringDao dao = new FlooringDaoFileImpl();
+//        FlooringAuditor auditor = new FlooringAuditorFileImpl();
+//        View view = new View();
+//        ServiceLayer service = new ServiceLayer(dao,auditor);
+//        
+//        Controller controller = new Controller(service, view);
+//        
+//        controller.run();
+//        }
+//        catch(Exception e){
+//            System.out.println(e.getMessage());
+//        }
+//        
+        ApplicationContext appContext
+                = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+
+        Controller controller = appContext.getBean("controller", Controller.class);
         controller.run();
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-        
-        
         
     }
 }

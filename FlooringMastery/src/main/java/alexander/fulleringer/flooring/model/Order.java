@@ -9,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Objects;
+import javax.swing.text.DateFormatter;
 
 /**
  *
@@ -190,7 +191,7 @@ public class Order {
                 + laborCost + Order.DELIMITER 
                 + tax + Order.DELIMITER 
                 + total + Order.DELIMITER
-                + orderDate.toString();
+                + orderDate.format(DateTimeFormatter.BASIC_ISO_DATE);
 
         
     }

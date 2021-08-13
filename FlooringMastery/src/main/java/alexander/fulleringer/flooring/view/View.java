@@ -82,7 +82,7 @@ public class View {
         for(Order order : orders){
             displayOrder(order);
         }
-        
+        io.readString("Press enter to continue");
     }
     public void displayOrder(Order order){
         if (order != null){
@@ -290,5 +290,41 @@ public class View {
         this.displayAllProducts(allProducts);
         return io.readString("Please choose one of the above products\n"
                 + "Or press enter to not make a change");    }
+
+    public String getEditArea(Order theOrder) {
+        io.print("Your current area is: " + theOrder.getArea().toString());
+        return io.readString("Please enter the new area\n"
+                + "Or press enter to not make a change");    
+    }
+
+    public boolean verifyOrderEdit(Order theOrder) {
+        io.print("Your order: " + theOrder.toString());
+        String s = io.readString("Would you like to persist your edits? Please enter yes or no");
+        if(s.equals("yes")){
+            return true;
+        }
+        if (s.equals("no")){
+            return false;
+        }
+        else{
+            return verifyOrderEdit(theOrder);
+        }
+        
+    }
+
+    public boolean confirmDrop(Order theOrder) {
+        io.print("Your order: " + theOrder.toString());
+        String s = io.readString("Would you like to remove this order? Please enter yes or no");
+        if(s.equals("yes")){
+            return true;
+        }
+        if (s.equals("no")){
+            return false;
+        }
+        else{
+            return confirmDrop(theOrder);
+        }
+    }
+    
     
 }

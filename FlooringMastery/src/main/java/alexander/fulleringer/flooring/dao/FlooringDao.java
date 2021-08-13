@@ -32,7 +32,7 @@ public interface FlooringDao {
     Order editProduct(String productType, Order order);
     Order editArea(BigDecimal area, Order order);
     
-    Order removeOrder(Integer orderNum);
+    Order removeOrder(Integer orderNum) throws DaoFileAccessException;
     Order getOrder(Integer orderNum);
     
     List<Order> importDatedOrders(LocalDate date) throws DaoFileAccessException;

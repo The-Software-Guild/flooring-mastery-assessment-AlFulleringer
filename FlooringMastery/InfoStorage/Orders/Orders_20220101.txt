@@ -1,0 +1,2 @@
+OrderNumber::CustomerName::State::TaxRate::ProductType::Area::CostPerSquareFoot::LaborCostPerSquareFoot::MaterialCost::LaborCost::Tax::Total::OrderDate
+6::Steve Jobs::CA::25.00::Wood::10000.5::5.15::4.75::51502.575::47502.375::24751.24::123756.190
